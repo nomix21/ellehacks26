@@ -5,7 +5,7 @@ export default function WelcomeScreen() {
     <ImageBackground
       source={require('../../assets/images/stars.png')}
       style={styles.container}
-      resizeMode="cover"
+      resizeMode="contain"
     >
       <Text style={styles.title}>GirlMath</Text>
     </ImageBackground>
@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#000',
+    backgroundColor: '#1B1B1B',
   },
   title: {
     color: '#fff',

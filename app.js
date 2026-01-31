@@ -1,7 +1,7 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import JournalScreen from './screens/JournalScreen';
-import InsightScreen from './screens/InsightScreen';
+import InsightScreen from './app/(tabs)/insights';
 import GalaxyScreen from './screens/GalaxyScreen';
 
 const Tab = createBottomTabNavigator();
