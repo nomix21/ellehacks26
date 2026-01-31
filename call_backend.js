@@ -110,35 +110,38 @@ export async function testGetAll() {
   console.log("all data:", JSON.stringify(res, null, 2));
 }
 
-export async function testAiRequest() {
-  const payload = {
-    content: "I struggled this week with math and felt slower than everyone else.",
-    date: Math.floor(Date.now() / 1000),
-    user_ID: "1adsa2aaf3",
-    read_journal: true,
-    read_quizzes: true,
-  };
+//dont spam this one
 
-  const res = await aiRequest(payload);
-  console.log("AI response:", res);
-}
-
-// export async function testSaveJournal() {
-//   const journal = {
-//     user_ID: "1adsa2aaf3",
-//     title: "test journal",
-//     content: "This is a test journal entry generated at " + new Date().toISOString(),
+// export async function testAiRequest() {
+//   const payload = {
+//     content: "I struggled this week with math and felt slower than everyone else.",
 //     date: Math.floor(Date.now() / 1000),
+//     user_ID: "1adsa2aaf3",
+//     read_journal: true,
+//     read_quizzes: true,
 //   };
 //
-//   const res = await saveJournalEntry(journal);
-//   console.log("journal saved:", res);
+//   const res = await aiRequest(payload);
+//   console.log("AI response:", res);
 // }
-// TEMP: run test directly if executed with node
+
+export async function testSaveJournal() {
+  const journal = {
+    user_ID: "1adsa2aaf3",
+    title: "test journal",
+    content: "This is a test journal entry generated at " + new Date().toISOString(),
+    date: Math.floor(Date.now() / 1000),
+  };
+
+  const res = await saveJournalEntry(journal);
+  console.log("journal saved:", res);
+}
+//TEMP: run test directly if executed with node
 async function runTests() {
   await testSaveQuiz();
   await testGetAll();
-  await testAiRequest();
+  await testSaveJournal();
+  //await testAiRequest();
 }
 
 runTests().catch(console.error);
