@@ -1,18 +1,28 @@
 // screens/LoginScreen.js
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+import { LinearGradient } from "expo-linear-gradient";
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 export default function LoginScreen() {
   return (
     <LinearGradient
-      colors={['#ff9a9e', '#fad0c4', '#fad0c4']}
+      colors={["#ff9a9e", "#fad0c4", "#fad0c4"]}
       style={styles.container}
     >
       <View style={styles.card}>
         <Text style={styles.title}>Create your account</Text>
 
         <TextInput placeholder="Email" style={styles.input} />
-        <TextInput placeholder="Password" secureTextEntry style={styles.input} />
+        <TextInput
+          placeholder="Password"
+          secureTextEntry
+          style={styles.input}
+        />
 
         <TouchableOpacity style={styles.button}>
           <Text style={styles.buttonText}>Sign In</Text>
@@ -23,25 +33,25 @@ export default function LoginScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: 'center', padding: 24 },
+  container: { flex: 1, justifyContent: "center", padding: 24 },
   card: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     borderRadius: 24,
     padding: 24,
   },
-  title: { fontSize: 22, marginBottom: 24, textAlign: 'center' },
+  title: { fontSize: 22, marginBottom: 24, textAlign: "center" },
   input: {
     borderWidth: 1,
-    borderColor: '#f7a',
+    borderColor: "#f7a",
     borderRadius: 12,
     padding: 12,
     marginBottom: 16,
   },
   button: {
-    backgroundColor: '#ff8fb1',
+    backgroundColor: "#ff8fb1",
     padding: 14,
     borderRadius: 16,
-    alignItems: 'center',
+    alignItems: "center",
   },
-  buttonText: { color: '#fff', fontWeight: '600' },
+  buttonText: { color: "#fff", fontWeight: "600" },
 });
