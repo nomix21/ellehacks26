@@ -2,6 +2,9 @@
 
 This is a project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
+## Figma
+Edit Access: [https://www.figma.com/design/6u2kD2Tsdj6AgP7yEjcfG1/ellehacks?node-id=13-318&t=vmLHJk4W8tZu0RrJ-1]
+
 ## Get started
 
 1. Install dependencies
