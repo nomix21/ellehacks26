@@ -39,7 +39,7 @@ export default function LoginScreen() {
       }
 
       const data = await res.json();
-    setSession({ userId: data.user_id, name, email });
+    setSession({ userId: data.user_id, name, email});
     console.log("LOGIN OK, USER ID:", data.user_id);
     } catch (e: any) {
       Alert.alert("Error", e.message ?? "Unknown error");
