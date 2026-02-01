@@ -224,6 +224,8 @@ export default function Journal() {
                     value={journalTitle}
                     onChangeText={setJournalTitle}
                     placeholder="Enter title"
+                    textAlignVertical="top"
+                    placeholderTextColor="#666"
                 />
                 <Text style={styles.label}>Journal Content</Text>
                 <TextInput
@@ -231,6 +233,7 @@ export default function Journal() {
                     value={journalContent}
                     onChangeText={setJournalContent}
                     placeholder="Write your journal entry..."
+                    placeholderTextColor="#666"
                     multiline
                     textAlignVertical="top"
                     numberOfLines={6}
