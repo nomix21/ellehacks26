@@ -4,6 +4,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { aiRequest, getAll } from "@/api/call_backend";
 import { LinearGradient } from "expo-linear-gradient";
 import { useEffect, useMemo, useState } from "react";
+import Svg, { Circle, Line, Path, Text as SvgText } from "react-native-svg";
 import {
   ActivityIndicator,
   Alert,
@@ -80,6 +81,167 @@ function formatDate(unixSeconds: number): string {
     day: "numeric",
     year: "numeric",
   });
+}
+
+function extractQuizMetrics(entry: any): { confidence: number | null; difficulty: number | null } {
+  const quiz = entry?.quiz ?? entry ?? {};
+
+  const confidenceRaw =
+    quiz?.confidence_level ?? quiz?.confidence ?? quiz?.Q1 ?? null;
+  const difficultyRaw =
+    quiz?.topic_difficulty ?? quiz?.difficulty ?? quiz?.Q2 ?? null;
+
+  const confidence =
+    confidenceRaw == null ? null : Number(confidenceRaw);
+  const difficulty =
+    difficultyRaw == null ? null : Number(difficultyRaw);
+
+  return {
+    confidence: Number.isFinite(confidence) ? confidence : null,
+    difficulty: Number.isFinite(difficulty) ? difficulty : null,
+  };
+}
+
+function clamp01(v: number): number {
+  return Math.max(0, Math.min(1, v));
+}
+
+function buildLinePath(points: { x: number; y: number }[]): string {
+  if (points.length === 0) return "";
+  const [first, ...rest] = points;
+  return (
+    `M ${first.x.toFixed(2)} ${first.y.toFixed(2)}` +
+    rest.map((p) => ` L ${p.x.toFixed(2)} ${p.y.toFixed(2)}`).join("")
+  );
+}
+
+function ConfidenceDifficultyChart({
+  items,
+  height = 170,
+}: {
+  items: TimelineItem[];
+  height?: number;
+}) {
+  const [width, setWidth] = useState(0);
+
+  const data = useMemo(() => {
+    const quizzesNewestFirst = items.filter((t) => t.type === "quiz");
+    const quizzesOldestFirst = [...quizzesNewestFirst].reverse();
+
+    const points = quizzesOldestFirst
+      .map((t) => {
+        const m = extractQuizMetrics(t.raw);
+        return { date: t.date, confidence: m.confidence, difficulty: m.difficulty };
+      })
+      // keep only rows with at least one usable value
+      .filter((r) => r.confidence != null || r.difficulty != null);
+
+    return points;
+  }, [items]);
+
+  // Not enough points to draw a line
+  if (data.length < 2) {
+    return (
+      <View style={styles.chartBox}>
+        <Text style={styles.chartTitle}>Confidence & Difficulty</Text>
+        <Text style={styles.chartEmpty}>Add a couple quizzes to see your trends.</Text>
+      </View>
+    );
+  }
+
+  const innerPad = 14;
+  const leftPad = 34; // room for y labels
+  const rightPad = 8; // keeps last point inside card bounds
+  const bottomPad = 22; // room for x labels
+
+  const w = Math.max(1, width);
+  const h = height;
+
+  const plotW = Math.max(1, w - leftPad - innerPad - rightPad);
+  const plotH = Math.max(1, h - innerPad - bottomPad);
+
+  // y scale is fixed to [0,10]
+  const yFor = (v: number) => innerPad + (1 - clamp01(v / 10)) * plotH;
+  const xForIndex = (i: number) => leftPad + (i / (data.length - 1)) * plotW;
+
+  const confPts = data
+    .map((r, i) => (r.confidence == null ? null : ({ x: xForIndex(i), y: yFor(r.confidence) })))
+    .filter(Boolean) as { x: number; y: number }[];
+
+  const diffPts = data
+    .map((r, i) => (r.difficulty == null ? null : ({ x: xForIndex(i), y: yFor(r.difficulty) })))
+    .filter(Boolean) as { x: number; y: number }[];
+
+  const confPath = buildLinePath(confPts);
+  const diffPath = buildLinePath(diffPts);
+
+  const firstDate = formatDate(data[0].date);
+  const lastDate = formatDate(data[data.length - 1].date);
+
+  return (
+    <View
+      style={styles.chartBox}
+      onLayout={(e) => setWidth(e.nativeEvent.layout.width)}
+    >
+      <View style={styles.chartHeaderRow}>
+        <Text style={styles.chartTitle}>Confidence & Difficulty</Text>
+        <View style={styles.chartLegendRow}>
+          <View style={styles.legendItem}>
+            <View style={[styles.legendDot, { backgroundColor: "#CC6692" }]} />
+            <Text style={styles.legendText}>Confidence</Text>
+          </View>
+          <View style={styles.legendItem}>
+            <View style={[styles.legendDot, { backgroundColor: "#e1c473" }]} />
+            <Text style={styles.legendText}>Difficulty</Text>
+          </View>
+        </View>
+      </View>
+
+      <View style={{ height }}>
+        {width > 0 ? (
+          <Svg width={w} height={h}>
+            {/* grid / axes */}
+            <Line x1={leftPad} y1={innerPad} x2={leftPad} y2={innerPad + plotH} stroke="#2a2a2a" strokeWidth={1} />
+            <Line x1={leftPad} y1={innerPad + plotH} x2={leftPad + plotW} y2={innerPad + plotH} stroke="#2a2a2a" strokeWidth={1} />
+
+            {/* y labels */}
+            <SvgText x={6} y={innerPad + 4} fill="#888" fontSize={11}>10</SvgText>
+            <SvgText x={10} y={innerPad + plotH} fill="#888" fontSize={11}>0</SvgText>
+
+            {/* horizontal mid grid */}
+            <Line x1={leftPad} y1={yFor(5)} x2={leftPad + plotW} y2={yFor(5)} stroke="#222" strokeWidth={1} />
+            <SvgText x={10} y={yFor(5) + 4} fill="#666" fontSize={11}>5</SvgText>
+
+            {/* lines */}
+            {diffPath ? <Path d={diffPath} stroke="#e1c473" strokeWidth={2.5} fill="none" /> : null}
+            {confPath ? <Path d={confPath} stroke="#CC6692" strokeWidth={2.5} fill="none" /> : null}
+
+            {/* points */}
+            {diffPts.map((p, idx) => (
+              <Circle key={`d-${idx}`} cx={p.x} cy={p.y} r={3} fill="#e1c473" />
+            ))}
+            {confPts.map((p, idx) => (
+              <Circle key={`c-${idx}`} cx={p.x} cy={p.y} r={3} fill="#CC6692" />
+            ))}
+
+            {/* x labels (first/last) */}
+            <SvgText x={leftPad} y={innerPad + plotH + 18} fill="#777" fontSize={10}>
+              {firstDate}
+            </SvgText>
+            <SvgText
+              x={leftPad + plotW}
+              y={innerPad + plotH + 18}
+              fill="#777"
+              fontSize={10}
+              textAnchor="end"
+            >
+              {lastDate}
+            </SvgText>
+          </Svg>
+        ) : null}
+      </View>
+    </View>
+  );
 }
 
 export default function History() {
@@ -270,6 +432,9 @@ export default function History() {
           </LinearGradient>
         </>
       )}
+
+      {/* Trends chart */}
+      <ConfidenceDifficultyChart items={timeline} />
 
       {/* Mentor chat */}
       <View style={styles.mentorBox}>
@@ -519,6 +684,55 @@ const styles = StyleSheet.create({
     marginTop: 6,
     fontSize: 15,
     lineHeight: 22,
+  },
+  chartBox: {
+    marginTop: 18,
+    borderRadius: 16,
+    backgroundColor: "#111",
+    borderWidth: 1,
+    borderColor: "#222",
+    padding: 16,
+  },
+  chartHeaderRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 10,
+    gap: 12,
+    flexWrap: "wrap",
+  },
+  chartTitle: {
+    color: "#fff",
+    fontSize: 18,
+    fontWeight: "700",
+    flexShrink: 1,
+  },
+  chartLegendRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    flexWrap: "wrap",
+    justifyContent: "flex-end",
+  },
+  legendItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+  },
+  legendDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 999,
+  },
+  legendText: {
+    color: "#bbb",
+    fontSize: 12,
+  },
+  chartEmpty: {
+    color: "#aaa",
+    marginTop: 6,
+    fontSize: 14,
+    lineHeight: 20,
   },
   mentorBox: {
     marginTop: 22,
