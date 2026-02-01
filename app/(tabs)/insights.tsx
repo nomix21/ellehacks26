@@ -4,7 +4,7 @@ import { StyleSheet, Text, View } from "react-native";
 export default function insights() {
   return (
     <LinearGradient
-      colors={["#ff9a9e", "#e3bef0", "#c386cf"]}
+      colors={["#CC6692", "#e1ac73","#e17f56", "#a695d5","#e07aa6"]}
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
       style={styles.container}
@@ -40,9 +40,11 @@ const styles = StyleSheet.create({
   },
   text: {
     color: "#fff",
-    fontSize: 28,
+    fontSize: 32,
     marginBottom: 50,
     marginTop: 50,
-    textAlign: "center",
+    textAlign: "left",
+    alignItems: "flex-start",
+    fontFamily: "Brawler",
   },
 });
