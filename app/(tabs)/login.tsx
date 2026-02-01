@@ -1,18 +1,15 @@
 // screens/LoginScreen.js
 import { LinearGradient } from "expo-linear-gradient";
-import {
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-  Pressable,
-} from "react-native";
+import {StyleSheet,Text,TextInput,TouchableOpacity,View,} from "react-native";
+import Button from '@/components/button';
 
 export default function LoginScreen() {
   return (
     <LinearGradient
-      colors={["#ff9a9e", "#fad0c4", "#fad0c4"]}
+      //colors={["#e1ac73","#e17f56", "#a695d5","#e07aa6"]}
+      colors={["#e07aa6", "#a695d5", "#e1ac73"]}
+      start={{ x: 1, y: 1 }}
+      end={{ x: 0, y: 0 }}
       style={styles.container}
     >
       <View style={styles.card}>
@@ -24,35 +21,43 @@ export default function LoginScreen() {
           secureTextEntry
           style={styles.input}
         />
+      <Button label="Sign In" />
 
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>Sign In</Text>
-        </TouchableOpacity>
       </View>
     </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: "center", padding: 24 },
+  container: { flex: 1, justifyContent: "center", paddingHorizontal: 24 },
   card: {
     backgroundColor: "#fff",
-    borderRadius: 24,
+    borderRadius: 36,
     padding: 24,
+    marginHorizontal: 24,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    elevation: 8,
+    height: 600,
+    justifyContent: "center",
   },
-  title: { fontSize: 22, marginBottom: 24, textAlign: "center" },
+  title: {
+    fontSize: 36,
+    marginBottom: 24,
+    textAlign: "center",
+    fontWeight: "300",
+    fontFamily: "Brawler",
+  },
   input: {
     borderWidth: 1,
     borderColor: "#f7a",
-    borderRadius: 12,
-    padding: 12,
+    borderRadius: 24,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
     marginBottom: 16,
+    backgroundColor: "#fff",
   },
-  button: {
-    backgroundColor: "#ff8fb1",
-    padding: 14,
-    borderRadius: 16,
-    alignItems: "center",
-  },
-  buttonText: { color: "#fff", fontWeight: "600" },
+  
 });
