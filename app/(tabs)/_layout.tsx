@@ -13,6 +13,7 @@ export default function TabLayout() {
         tabBarInactiveTintColor: "#cccbcb",
       }}
     >
+      
       <Tabs.Screen
         name="index"
         options={{
@@ -26,6 +27,21 @@ export default function TabLayout() {
           ),
         }}
       />
+
+      <Tabs.Screen
+        name="login"
+        options={{
+          title: " ",
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons
+              name={focused ? "person-circle-outline" : "person-circle-outline"}
+              color={color}
+              size={24}
+            />
+          ),
+        }}
+      />
+      
       <Tabs.Screen
         name="insights"
         options={{
@@ -39,6 +55,7 @@ export default function TabLayout() {
           ),
         }}
       />
+
     </Tabs>
   );
 }
