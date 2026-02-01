@@ -34,7 +34,7 @@ export default function TabLayout() {
         }}
       >
         <Tabs.Screen
-          name="index"
+          name="GirlMath"
           options={{
             tabBarIcon: ({ color, focused }) => (
               <Ionicons
