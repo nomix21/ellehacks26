@@ -9,12 +9,13 @@ import {
   View,
   Alert,
 } from "react-native";
+import { useSession } from "@/app/context/SessionContext";
 
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
-  const [userId, setUserId] = useState<string | null>(null);
+  const { setSession, userId } = useSession();
 
   const API_BASE = "http://147.182.158.24:7000";
 
@@ -38,8 +39,8 @@ export default function LoginScreen() {
       }
 
       const data = await res.json();
-      setUserId(data.user_id);
-      console.log("LOGIN OK, USER ID:", data.user_id);
+    setSession({ userId: data.user_id, name, email });
+    console.log("LOGIN OK, USER ID:", data.user_id);
     } catch (e: any) {
       Alert.alert("Error", e.message ?? "Unknown error");
     } finally {

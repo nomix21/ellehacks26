@@ -60,7 +60,7 @@ export default function Journal() {
       date: Math.floor(Date.now() / 1000), // integer seconds
       title: journalTitle,
       content: journalContent,
-      user_ID: "", // empty for now; replace with real user ID when available
+      user_ID: userId,
     };
     setLoading(true);
 
