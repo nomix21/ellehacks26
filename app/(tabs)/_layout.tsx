@@ -56,6 +56,20 @@ export default function TabLayout() {
         }}
       />
 
+    <Tabs.Screen
+        name="journal"
+        options={{
+            title: " ",
+            tabBarIcon: ({ color, focused }) => (
+                <Ionicons
+                    name={focused ? "book" : "book-outline"}
+                    color={color}
+                    size={24}
+                />
+            ),
+        }}
+    />
+
     </Tabs>
   );
 }
