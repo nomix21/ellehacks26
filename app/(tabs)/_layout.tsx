@@ -2,6 +2,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { Tabs } from "expo-router";
 import { StyleSheet, View } from "react-native";
 
+
 export default function TabLayout() {
   return (
     <View style={styles.darkBackground}>
