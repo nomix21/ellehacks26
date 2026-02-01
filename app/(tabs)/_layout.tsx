@@ -86,6 +86,19 @@ export default function TabLayout() {
               ),
           }}
       />
+    <Tabs.Screen
+              name="galaxy"
+              options={{
+                tabBarIcon: ({ color, focused }) => (
+                  <Ionicons
+                    name={focused ? "star-outline" : "star-outline"}
+                    color={color}
+                    size={24}
+                  />
+                ),
+              }}
+            />
+
       </Tabs>
     </View>
   );

@@ -241,7 +241,6 @@ const styles = StyleSheet.create({
   date: {
     color: "#fff",
     fontSize: 34,
-
     marginBottom: 12,
     marginTop: 18,
     fontFamily: "Brawler",
