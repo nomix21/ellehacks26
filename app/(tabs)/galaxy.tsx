@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
-import Svg, { Defs, Ellipse, LinearGradient, Stop } from "react-native-svg";
+import Svg, { Ellipse, Defs, LinearGradient, Stop, ClipPath, Image as SvgImage } from "react-native-svg";
 
 export default function GalaxyScreen() {
   return (
@@ -8,6 +8,7 @@ export default function GalaxyScreen() {
 
       <Svg width={280} height={420}>
         <Defs>
+          {/* Gradient for ellipse border */}
           <LinearGradient
             id="ellipseGradient"
             x1="0%"
@@ -21,21 +22,32 @@ export default function GalaxyScreen() {
             <Stop offset="75%" stopColor="#ffb347" />
             <Stop offset="100%" stopColor="#fff" />
           </LinearGradient>
+
+          {/* Clip path for ellipse */}
+          <ClipPath id="ellipseClip">
+            <Ellipse cx="140" cy="210" rx="130" ry="200" />
+          </ClipPath>
         </Defs>
 
+        {/* Image clipped to ellipse */}
+        <SvgImage
+          href={require("../../assets/images/stars.png")} // path relative to this file
+          width={280}
+          height={420}
+          clipPath="url(#ellipseClip)"
+          preserveAspectRatio="xMidYMid slice"
+        />
+
+        {/* Ellipse border with gradient */}
         <Ellipse
           cx="140"
           cy="210"
           rx="130"
           ry="200"
-          fill="#111"
+          fill="transparent"
           stroke="url(#ellipseGradient)"
           strokeWidth="2"
         />
-        {/*
-          BACKEND:
-          insert stars here using <Circle /> components
-        */}
       </Svg>
 
       <Text style={styles.quote}>
@@ -57,9 +69,6 @@ const styles = StyleSheet.create({
     fontSize: 32,
     marginBottom: 16,
     fontFamily: "Brawler",
-  },
-  ovalWrapper: {
-    marginBottom: 24,
   },
   quote: {
     color: "#bdbdbd",
