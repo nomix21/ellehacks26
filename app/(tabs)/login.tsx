@@ -54,7 +54,7 @@ export default function LoginScreen() {
       style={styles.container}
     >
       <View style={styles.card}>
-        <Text style={styles.title}>Create your account</Text>
+        <Text style={styles.title}>Log In / Sign up</Text>
 
         <TextInput
           placeholder="Name"
