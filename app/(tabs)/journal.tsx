@@ -28,9 +28,42 @@ export default function Journal() {
   //journal stuff
   const [journalTitle, setJournalTitle] = useState<string>("");
   const [journalContent, setJournalContent] = useState<string>("");
+  // custom metrics
+  const [customMetrics, setCustomMetrics] = useState<
+    { id: string; label: string; value: number }[]
+  >([]);
+  const [addingMetric, setAddingMetric] = useState(false);
+  const [newMetricLabel, setNewMetricLabel] = useState("");
 
   const emojis = ["😄", "🙂", "😐", "😞", "😢"];
   const {userId} = useSession()
+  const addMetric = () => {
+    const label = newMetricLabel.trim();
+    if (!label) return;
+
+    // Prevent duplicates (case-insensitive)
+    const exists = customMetrics.some(
+      (m) => m.label.toLowerCase() === label.toLowerCase()
+    );
+    if (exists) {
+      Alert.alert("Already added", "You already have a metric with that name.");
+      return;
+    }
+
+    setCustomMetrics((prev) => [
+      ...prev,
+      { id: String(Date.now()), label, value: 5 },
+    ]);
+    setNewMetricLabel("");
+    setAddingMetric(false);
+  };
+
+  const updateMetricValue = (id: string, value: number) => {
+    setCustomMetrics((prev) =>
+      prev.map((m) => (m.id === id ? { ...m, value } : m))
+    );
+  };
+
   const buildQuizPayload = useCallback(() => {
     return {
       date: new Date().toISOString(),
@@ -42,6 +75,10 @@ export default function Journal() {
         confidence_level: confidence,
         topic_difficulty: difficulty,
         what_did_you_learn_today: learningText,
+        custom_metrics: customMetrics.reduce((acc, m) => {
+          acc[m.label] = m.value;
+          return acc;
+        }, {} as Record<string, number>),
       },
     };
   }, [
@@ -51,6 +88,7 @@ export default function Journal() {
     difficulty,
     tomorrowGoal,
     metYesterdayGoal,
+    customMetrics,
   ]);
 
   const handleSave = useCallback(async (): Promise<void> => {
@@ -158,7 +196,7 @@ export default function Journal() {
       />
       <Text style={styles.sliderValue}>{confidence}</Text>
 
-      <Text style={styles.label}>How hard was the topic?</Text>
+    <Text style={styles.label}>How hard was the topic?</Text>
       <Slider
         style={styles.slider}
         minimumValue={0}
@@ -196,15 +234,59 @@ export default function Journal() {
       />
       <Text style={styles.sliderValue}>{difficulty}</Text>
 
-      <Text style={styles.label}>Did you meet the goal you set yesterday?</Text>
-      <View style={styles.switch}>
-        <Switch
-          value={metYesterdayGoal}
-          onValueChange={setMetYesterdayGoal}
-          thumbColor={metYesterdayGoal ? "#9fdc70" : "#fff"}
-          trackColor={{ false: "#555", true: "#9fdc70" }}
-        />
+      <View style={styles.metricActionsRow}>
+        <View style={{ flex: 1 }} />
+        <Pressable
+          onPress={() => setAddingMetric((v) => !v)}
+          style={styles.plusSquircle}
+          accessibilityLabel="Add a custom metric"
+        >
+          <Text style={styles.plusText}>+</Text>
+        </Pressable>
       </View>
+
+      {addingMetric ? (
+        <View style={styles.addMetricRow}>
+          <TextInput
+            value={newMetricLabel}
+            onChangeText={setNewMetricLabel}
+            placeholder="Add custom metric (e.g., focus, stress)"
+            placeholderTextColor="#777"
+            style={styles.addMetricInput}
+          />
+          <Pressable onPress={addMetric} style={styles.addMetricBtn}>
+            <Text style={styles.addMetricBtnText}>Add</Text>
+          </Pressable>
+        </View>
+      ) : null}
+
+      {customMetrics.map((m) => (
+        <View key={m.id} style={styles.customMetricBlock}>
+          <Text style={styles.label}>{m.label}</Text>
+          <Slider
+            style={styles.slider}
+            minimumValue={0}
+            maximumValue={10}
+            step={1}
+            value={m.value}
+            onValueChange={(v) => updateMetricValue(m.id, v)}
+            minimumTrackTintColor="#e1c473"
+            maximumTrackTintColor="#444"
+            thumbTintColor="#e1c473"
+          />
+          <Text style={styles.sliderValue}>{m.value}</Text>
+        </View>
+      ))}
+
+  <View style={styles.switchRow}>
+    <Text style={styles.switchLabel}>Did you meet the goal you set yesterday?</Text>
+    <Switch
+      value={metYesterdayGoal}
+      onValueChange={setMetYesterdayGoal}
+      thumbColor={metYesterdayGoal ? "#9fdc70" : "#fff"}
+      trackColor={{ false: "#555", true: "#9fdc70" }}
+    />
+  </View>
 
       <Text style={styles.label}>What will you aim for tomorrow?</Text>
       <TextInput
@@ -303,14 +385,17 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly",
     marginTop: 20,
   },
-  switch: {
+  switchRow: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 25,
-    justifyContent: "flex-end",
-    marginTop: 0,
-    marginBottom: 0,
-    marginHorizontal: 30,
+    justifyContent: "space-between",
+    marginTop: 24,
+  },
+  switchLabel: {
+    color: "#ccc",
+    fontSize: 16,
+    flex: 1,
+    paddingRight: 16,
   },
   emojiRow: {
     flexDirection: "row",
@@ -361,6 +446,59 @@ const styles = StyleSheet.create({
     color: "#ccc",
     marginTop: 4,
     fontSize: 16,
+  },
+  metricActionsRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 6,
+  },
+  plusSquircle: {
+    width: 36,
+    height: 36,
+    borderRadius: 12,
+    backgroundColor: "#2a2a2a",
+    borderWidth: 1,
+    borderColor: "#444",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  plusText: {
+    color: "#ddd",
+    fontSize: 22,
+    fontWeight: "700",
+    lineHeight: 22,
+  },
+  addMetricRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    marginTop: 10,
+  },
+  addMetricInput: {
+    flex: 1,
+    backgroundColor: "#222",
+    color: "#fff",
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: "#444",
+  },
+  addMetricBtn: {
+    borderRadius: 14,
+    backgroundColor: "#CC6692",
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  addMetricBtnText: {
+    color: "#fff",
+    fontSize: 14,
+    fontWeight: "700",
+  },
+  customMetricBlock: {
+    marginTop: 0,
   },
   bottomCard: {
     position: "absolute",
