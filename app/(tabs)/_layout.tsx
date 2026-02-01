@@ -100,6 +100,15 @@ export default function TabLayout() {
               }}
             />
 
+          <Tabs.Screen
+              name="past_journals"
+              options={{
+                  title: "Journals",
+                  tabBarIcon: ({ color, focused }) => (
+                      <Ionicons name={focused ? "bookmarks" : "bookmarks-outline"} color={color} size={24} />
+                  ),
+              }}
+          />
       </Tabs>
     </View>
   );
