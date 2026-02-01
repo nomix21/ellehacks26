@@ -1,4 +1,6 @@
 import { ImageBackground, StyleSheet, Text } from "react-native";
+import {  Button } from "react-native";
+import { useSession } from "../context/SessionContext";
 
 export default function index() {
   return (
