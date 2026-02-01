@@ -13,7 +13,6 @@ import {
     TextInput,
     View,
 } from "react-native";
-import { saveJournalEntry } from '@/api/call_backend';
 import {useSession} from "@/app/context/SessionContext";
 
 export default function Journal() {
