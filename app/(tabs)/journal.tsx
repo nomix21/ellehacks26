@@ -217,25 +217,6 @@ export default function Journal() {
         multiline
       />
 
-<LinearGradient
-  colors={["#D0AA7D", "#CCA872", "#CB8B6A", "#e07aa6", "#a695d5","#95a5d5"]}  // Your extracted palette
-  start={{ x: 0, y: 0 }}
-  end={{ x: 1, y: 1 }}
-  style={styles.saveGradient}
->
-
-      <Pressable
-        style={[styles.saveButton, loading ? styles.saveButtonDisabled : null]}
-        onPress={handleSave}
-        disabled={loading}
-      >
-        {loading ? (
-          <ActivityIndicator color="#fff" />
-        ) : (
-          <Text style={styles.saveButtonText}>Save Journal</Text>
-        )}
-      </Pressable>
-    </LinearGradient>
             <View style={styles.section}>
                 <Text style={styles.label}>Journal Title</Text>
                 <TextInput
@@ -256,17 +237,25 @@ export default function Journal() {
                 />
             </View>
 
+        <LinearGradient
+            colors={["#D0AA7D", "#CCA872", "#CB8B6A", "#e07aa6", "#a695d5","#95a5d5"]}  // Your extracted palette
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.saveGradient}
+        >
+
             <Pressable
                 style={[styles.saveButton, loading ? styles.saveButtonDisabled : null]}
                 onPress={handleSave}
                 disabled={loading}
             >
                 {loading ? (
-                    <ActivityIndicator color="#111" />
+                    <ActivityIndicator color="#fff" />
                 ) : (
                     <Text style={styles.saveButtonText}>Save Journal</Text>
                 )}
             </Pressable>
+        </LinearGradient>
 
             {saved ? <Text style={styles.savedText}>Saved ✓</Text> : null}
             <View style={{ height: 140 }}/>
