@@ -3,7 +3,6 @@
 This is a project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
 ## Figma
-['Edit Access'](https://www.figma.com/design/6u2kD2Tsdj6AgP7yEjcfG1/ellehacks?node-id=13-318&t=vmLHJk4W8tZu0RrJ-1)
 
 ['View Prototype'](https://www.figma.com/proto/6u2kD2Tsdj6AgP7yEjcfG1/ellehacks?node-id=13-318&t=M79xlvti4x2v7dMx-1)
 
@@ -19,6 +18,9 @@ This is a project created with [`create-expo-app`](https://www.npmjs.com/package
 
    ```bash
    npx expo start
+   ```
+   ```
+   npm start
    ```
 
 In the output, you'll find options to open the app in a
