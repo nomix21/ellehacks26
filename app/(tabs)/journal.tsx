@@ -2,8 +2,10 @@ import { useState, useCallback } from "react";
 import { StyleSheet, View, Text, TextInput, ScrollView, Pressable, ActivityIndicator, Alert, Switch} from "react-native";
 import Slider from "@react-native-community/slider";
 import {saveQuestionnaire} from "@/api/call_backend";
+import { saveJournalEntry } from '@/api/call_backend';
 
 export default function Journal() {
+    //questionnaire stuff
     const [selectedEmoji, setSelectedEmoji] = useState("");
     const [confidence, setConfidence] = useState(5);
     const [difficulty, setDifficulty] = useState(5);
@@ -12,6 +14,9 @@ export default function Journal() {
     const [saved, setSaved] = useState(false);
     const [metYesterdayGoal, setMetYesterdayGoal] = useState<boolean>(false);
     const [tomorrowGoal, setTomorrowGoal] = useState<string>("");
+    //journal stuff
+    const [journalTitle, setJournalTitle] = useState<string>("");
+    const [journalContent, setJournalContent] = useState<string>("");
 
     const emojis = ["😄", "🙂", "😐", "😞", "😢"];
 
@@ -29,12 +34,19 @@ export default function Journal() {
     const handleSave = useCallback(async (): Promise<void> => {
         setSaved(false);
         const payload = buildQuizPayload();
+        const payloadJournal = {
+            date: Math.floor(Date.now() / 1000), // integer seconds
+            title: journalTitle,
+            content: journalContent,
+            user_ID: '', // empty for now; replace with real user ID when available
+        };
         setLoading(true);
 
         try {
 
             await saveQuestionnaire(payload);
-
+            await saveJournalEntry(payloadJournal);
+            Alert.alert('Saved', 'Journal entry saved successfully.');
             // mark success
             setSaved(true);
         } catch (err: any) {
@@ -42,7 +54,7 @@ export default function Journal() {
         } finally {
             setLoading(false);
         }
-    }, [buildQuizPayload]);
+    }, [buildQuizPayload, journalTitle, journalContent]);
 
     return (
         <ScrollView style={styles.container}>
@@ -125,6 +137,26 @@ export default function Journal() {
                 multiline
             />
 
+            <View style={styles.section}>
+                <Text style={styles.label}>Journal Title</Text>
+                <TextInput
+                    style={styles.input}
+                    value={journalTitle}
+                    onChangeText={setJournalTitle}
+                    placeholder="Enter title"
+                />
+                <Text style={styles.label}>Journal Content</Text>
+                <TextInput
+                    style={[styles.input, styles.multiline]}
+                    value={journalContent}
+                    onChangeText={setJournalContent}
+                    placeholder="Write your journal entry..."
+                    multiline
+                    textAlignVertical="top"
+                    numberOfLines={6}
+                />
+            </View>
+
             <Pressable
                 style={[styles.saveButton, loading ? styles.saveButtonDisabled : null]}
                 onPress={handleSave}
@@ -138,6 +170,7 @@ export default function Journal() {
             </Pressable>
 
             {saved ? <Text style={styles.savedText}>Saved ✓</Text> : null}
+            <View style={{ height: 140 }}/>
         </ScrollView>
     );
 }
@@ -224,4 +257,6 @@ const styles = StyleSheet.create({
         marginTop: 12,
         fontSize: 14,
     },
+    section: { marginTop: 24 },
+    multiline: { height: 140, marginTop: 8 },
 });
