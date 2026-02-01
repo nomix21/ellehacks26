@@ -16,7 +16,7 @@ export default function Button({ label }: Props) {
     <View style={styles.buttonContainer}>
       <Pressable
         style={styles.button}
-        onPress={() => navigation.navigate("insights")} // screen is insights.tsx
+        onPress={() => navigation.navigate("insights")} // CHANGE TARGET TO: journal
       >
         <Text style={styles.buttonLabel}>{label}</Text>
       </Pressable>
