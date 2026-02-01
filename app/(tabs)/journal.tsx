@@ -13,6 +13,8 @@ import {
     TextInput,
     View,
 } from "react-native";
+import { saveJournalEntry } from '@/api/call_backend';
+import {useSession} from "@/app/context/SessionContext";
 
 export default function Journal() {
   //questionnaire stuff
@@ -29,11 +31,11 @@ export default function Journal() {
   const [journalContent, setJournalContent] = useState<string>("");
 
   const emojis = ["😄", "🙂", "😐", "😞", "😢"];
-
+  const {userId} = useSession()
   const buildQuizPayload = useCallback(() => {
     return {
       date: new Date().toISOString(),
-      user_ID: "",
+      user_ID: userId,
       tomorrow: tomorrowGoal,
       yesterday_goal: metYesterdayGoal,
       quiz: {
