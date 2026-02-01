@@ -1,14 +1,12 @@
-import { ImageBackground, StyleSheet, Text } from "react-native";
+import { ImageBackground, StyleSheet } from "react-native";
 
 export default function index() {
   return (
     <ImageBackground
-      source={require("../../assets/images/stars.png")}
-      style={styles.container}
-      resizeMode="contain"
-    >
-      <Text style={styles.title}>GirlMath</Text>
-    </ImageBackground>
+      source={require("../../assets/images/welcome.png")}
+      style={[styles.container, { width: '100%', height: '100%' }]}
+      resizeMode="cover"
+    />
   );
 }
 
@@ -19,9 +17,5 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#1B1B1B",
   },
-  title: {
-    color: "#fff",
-    fontSize: 36,
-    fontWeight: "600",
-  },
+  
 });

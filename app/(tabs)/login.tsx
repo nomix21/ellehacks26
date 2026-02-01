@@ -1,12 +1,7 @@
 // screens/LoginScreen.js
 import { LinearGradient } from "expo-linear-gradient";
-import {
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import {StyleSheet,Text,TextInput,TouchableOpacity,View,} from "react-native";
+import Button from '@/components/button';
 
 export default function LoginScreen() {
   return (
@@ -26,10 +21,8 @@ export default function LoginScreen() {
           secureTextEntry
           style={styles.input}
         />
+      <Button label="Sign In" />
 
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>Sign In</Text>
-        </TouchableOpacity>
       </View>
     </LinearGradient>
   );
@@ -66,20 +59,5 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     backgroundColor: "#fff",
   },
-  button: {
-    backgroundColor: "#ff8fb1",
-    paddingVertical: 14,
-    borderRadius: 24,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  buttonText: {
-    color: "#fff",
-    fontWeight: "600",
-    fontSize: 16,
-  },
+  
 });
