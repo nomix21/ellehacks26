@@ -11,9 +11,13 @@ export default function insights() {
     >
       <View style={styles.container}>
         <View style={styles.innerContainer}>
-          <Text style={styles.text}>You accomplished 5 goals this week.</Text>
-          <Text style={styles.text}>Your confidence has doubled.</Text>
-          <Text style={styles.text}>Overall, you were happy.</Text>
+          <Text style={styles.text}>You accomplished 5 goals this week!</Text>
+          <Text style={styles.text}>
+            Your confidence in geometry has doubled from last month.
+          </Text>
+          <Text style={styles.text}>
+            Overall, you were feeling happy this week.
+          </Text>
         </View>
       </View>
     </LinearGradient>
@@ -36,7 +40,9 @@ const styles = StyleSheet.create({
   },
   text: {
     color: "#fff",
-    fontSize: 20,
-    marginBottom: 24,
+    fontSize: 28,
+    marginBottom: 50,
+    marginTop: 50,
+    textAlign: "center",
   },
 });
